@@ -1,0 +1,10 @@
+{
+  "doc": "nda",
+  "my_side": "을",
+  "contract_date": "2026-11-25",
+  "party_a": {"name": "주식회사 다온테크", "ceo": "정다온", "address": "서울특별시 강남구 견본로 90", "biz_no": "567-89-01234"},
+  "party_b": {"name": "새솔소프트", "ceo": "한새솔", "address": "광주광역시 북구 예시길 11", "biz_no": "678-90-12345"},
+  "purpose": "매장 예약 앱 공동 개발 협의",
+  "term_years": 2,
+  "survive_years": 3
+}

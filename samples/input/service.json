@@ -1,0 +1,21 @@
+{
+  "doc": "service",
+  "my_side": "을",
+  "contract_date": "2026-12-01",
+  "party_a": {"name": "주식회사 바른식품", "ceo": "박바른", "address": "부산광역시 해운대구 견본대로 56", "biz_no": "345-67-89012"},
+  "party_b": {"name": "온길마케팅연구소", "ceo": "최온길", "address": "대전광역시 유성구 예시로 78", "biz_no": "456-78-90123"},
+  "field": "온라인 마케팅",
+  "services": ["월 2회 마케팅 자문 회의(회당 2시간)", "월간 광고 성과 분석 보고서 작성", "직원 대상 SNS 운영 교육 분기 1회"],
+  "delivery": "대면 또는 화상 회의",
+  "start": "2027-01-01",
+  "end": "2027-06-30",
+  "pay_mode": "monthly",
+  "monthly_fee": 1500000,
+  "pay_day": 10,
+  "vat": "별도",
+  "report_cycle": "매월",
+  "materials": ["광고 계정 열람 권한", "월별 매출 요약 자료"],
+  "copyright_owner": "을",
+  "termination_notice_days": 30,
+  "late_interest_pct": 6
+}
