@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 
-from . import checks
+from . import __version__, checks, tool_version_label
 from .docx_builder import BLANK, DISCLAIMER, Doc, v, ymd
 from .laws import cite
 from .render import docx_to_pdf, pdf_to_png
@@ -34,6 +34,8 @@ def build_docx(spec, path):
     for key, label in (("name", "상호(성명)"), ("ceo", "대표자"), ("address", "주소"), ("biz_no", "사업자등록번호")):
         rows.append([label] + [v(p.get(key)) + ("  (인)" if key == "ceo" else "") for _, p in spec["parties"]])
     doc.table(rows, widths_mm=[30, 70, 70])
+    doc.para("")
+    doc.para(tool_version_label(), size=8, color=(120, 120, 120))
     doc.save(path)
 
 
@@ -54,6 +56,7 @@ def build_md(spec):
     out.append("|---|" + "---|" * len(spec["parties"]))
     for key, label in (("name", "상호(성명)"), ("ceo", "대표자"), ("address", "주소"), ("biz_no", "사업자등록번호")):
         out.append(f"| {label} | " + " | ".join(v(p.get(key)) + (" (인)" if key == "ceo" else "") for _, p in spec["parties"]) + " |")
+    out += ["", tool_version_label()]
     return "\n".join(out) + "\n"
 
 
@@ -66,7 +69,8 @@ def notes_md(data, rep, files):
               "## 참고 조문 (법제처 원문 대조)"]
     lines += [f"- {cite(k)}" for k in BASIS[data["doc"]]]
     lines += ["", "## 서명 전 확인", "- [ ] 빈칸(＿＿)을 모두 채웠나요?", "- [ ] 상대방과 조건을 합의했나요?",
-              "- [ ] 금액이 크거나 조건이 복잡하면 변호사 검토를 받았나요?", "", "만든 파일: " + ", ".join(Path(f).name for f in files if f)]
+              "- [ ] 금액이 크거나 조건이 복잡하면 변호사 검토를 받았나요?", "", "만든 파일: " + ", ".join(Path(f).name for f in files if f),
+              "", tool_version_label()]
     return "\n".join(lines) + "\n"
 
 
@@ -83,7 +87,7 @@ def generate(data, outdir, stem=None, pdf=True, png=True):
     dx, md = outdir / f"{stem}.docx", outdir / f"{stem}.md"
     build_docx(spec, dx)
     md.write_text(build_md(spec), encoding="utf-8")
-    out = {"docx": str(dx), "md": str(md), "report": rep.as_dict()}
+    out = {"docx": str(dx), "md": str(md), "report": rep.as_dict(), "tool_version": __version__}
     if pdf:
         p = docx_to_pdf(dx, outdir)
         out["pdf"] = str(p)

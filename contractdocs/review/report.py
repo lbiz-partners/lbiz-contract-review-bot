@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 
+from .. import __version__, tool_version_label
 from ..docx_builder import Doc
 from ..laws import LAWS, cite
 from ..render import docx_to_pdf, pdf_to_png
@@ -40,7 +41,8 @@ def to_md(res, name="계약서"):
          f"- 관점: 사장님 = **{res['side']}**",
          f"- 위험 점수: **{sc['점수']}점 / 100 · {sc['등급']}** (같은 계약서면 늘 같은 점수)",
          f"- 독소 확정 {len(res['final_ids'])}건: " + (", ".join(f"{i} {catalog.TOXIC[i]['name']}" for i in res["final_ids"]) or "없음"),
-         f"- {'서명 전 변호사 검토를 권합니다.' if sc['변호사_검토_필수'] else '협상으로 고칠 수 있는 수준입니다.'}"]
+         f"- {'서명 전 변호사 검토를 권합니다.' if sc['변호사_검토_필수'] else '협상으로 고칠 수 있는 수준입니다.'}",
+         f"- {tool_version_label()}"]
     if res["adjust"]["confirm"] or res["adjust"]["reject"]:
         L.append(f"- 원문을 읽고 조정함: 추가 {res['adjust']['confirm'] or '없음'} / 제외 {res['adjust']['reject'] or '없음'}")
     L += ["", "## 독소조항 12종 점검표", "", "| # | 항목 | 결과 | 위험 | 위치 |", "|---|---|---|---|---|"]
@@ -137,7 +139,7 @@ def write(res, outdir, stem, name=None, pdf=True, png=True):
     md = to_md(res, name or stem)
     mdp = outdir / f"{stem}.점검리포트.md"
     mdp.write_text(md, encoding="utf-8")
-    out = {"md": str(mdp), "score": res["score"], "final_ids": res["final_ids"]}
+    out = {"md": str(mdp), "score": res["score"], "final_ids": res["final_ids"], "tool_version": __version__}
     dx = outdir / f"{stem}.점검리포트.docx"
     to_docx(md, dx)
     out["docx"] = str(dx)

@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from contractdocs import checks  # noqa: E402
+from contractdocs import __version__, checks, tool_version_label  # noqa: E402
 from contractdocs.docx_builder import DISCLAIMER, Doc  # noqa: E402
 from contractdocs.generate import Blocked, generate  # noqa: E402
 from contractdocs.laws import LAWS, cite  # noqa: E402
@@ -225,6 +225,41 @@ class TestGenerator(unittest.TestCase):
         self.assertIn("PENALTY_HIGH", rep.codes("warn"))
         d["payment_split"] = [30, 30, 30]
         self.assertIn("SPLIT_SUM", checks.check(d).codes("error"))
+
+    def test_tool_version_in_draft_outputs(self):
+        self.assertEqual(__version__, (ROOT / "VERSION").read_text(encoding="utf-8").strip())
+        label = tool_version_label()
+        self.assertEqual(label, f"도구 판 v{__version__}")
+        for k, o in self.out.items():
+            self.assertEqual(o.get("tool_version"), __version__, k)
+            md = Path(o["md"]).read_text(encoding="utf-8")
+            self.assertIn(label, md, k)
+            self.assertEqual(md.count(label), 1, k)
+            notes = next(Path(o["md"]).parent.glob("*.작성메모.md"))
+            self.assertIn(label, notes.read_text(encoding="utf-8"), k)
+            txt = re.sub(r"\s+", "", pdf_text(o["pdf"]))
+            self.assertIn("도구판v" + __version__, txt, k)
+
+
+class TestReviewVersion(unittest.TestCase):
+    def test_tool_version_in_review_report(self):
+        label = tool_version_label()
+        r = review(S / "review" / "sample1_web_design.txt")
+        md = to_md(r)
+        self.assertIn(label, md)
+        self.assertIn(f"- {label}", md)
+        with tempfile.TemporaryDirectory() as td:
+            out = write(r, td, "s1", pdf=False, png=False)
+            self.assertEqual(out.get("tool_version"), __version__)
+            self.assertIn(label, Path(out["md"]).read_text(encoding="utf-8"))
+            from docx import Document
+            doc = Document(out["docx"])
+            texts = [para.text for para in doc.paragraphs]
+            for table in doc.tables:
+                for row in table.rows:
+                    for cell in row.cells:
+                        texts.append(cell.text)
+            self.assertIn(label, "\n".join(texts))
 
 
 class TestLaws(unittest.TestCase):
