@@ -48,5 +48,5 @@ description: 봇 지시나 기억에 이 스킬 이름(「계약서 도우미 �
 - 점검: 12종 표(①일방 해지 ②무한 수정 ③과도한 위약금 ④무한 책임 ⑤일방 저작권 양도 ⑥자동 갱신 ⑦상대방 본사 관할 ⑧일방 수정권 ⑨일방 비밀유지 ⑩연대보증 ⑪선급금 0원 ⑫검수 일방)로 원문을 읽고 판단하되, 점수는 위 4장 공식으로 그 자리에서 셈하지 말고 "점수는 도구 복구 후 드릴게요"라고 한다. 근거 조문은 모두 [확인 필요]를 붙인다.
 
 ## 8. 도구 무결성
-- 도구 저장소·태그: https://github.com/lbiz-partners/lbiz-contract-review-bot (태그 v1.1)
+- 도구 저장소·태그: https://github.com/lbiz-partners/lbiz-contract-review-bot (태그 v1.2)
 - 파일별 sha256: 저장소의 MANIFEST.txt에 적힌 값(`sha256sum -c MANIFEST.txt`로 확인). 값이 다르면 그 도구를 쓰지 않고 7장으로 간다.

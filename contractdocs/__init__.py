@@ -12,5 +12,5 @@ __version__ = _read_version()
 
 
 def tool_version_label():
-    """결과물(초안·리포트)에 찍는 짧은 판 표시. 예: 도구 판 v1.1"""
+    """결과물(초안·리포트)에 찍는 짧은 판 표시. 예: 도구 판 v1.2"""
     return f"도구 판 v{__version__}"
