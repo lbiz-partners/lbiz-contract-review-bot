@@ -11,7 +11,7 @@ description: 봇 지시나 기억에 이 스킬 이름(「계약서 도우미 �
 
 ## 2. 도구 준비 (사장님께는 보이지 않게)
 1. 박스에 `~/contract-helper/contractdocs/__main__.py` 가 있는지 본다.
-2. 없으면 받아 둔다: `git clone --depth 1 --branch v1 https://github.com/lbiz-partners/lbiz-contract-review-bot ~/contract-helper` 로 내려받고, `cd ~/contract-helper && sha256sum -c MANIFEST.txt` 가 모두 OK인지 확인한다. 값이 다르면 쓰지 않는다.
+2. 없으면 받아 둔다: `git clone --depth 1 --branch v1.1 https://github.com/lbiz-partners/lbiz-contract-review-bot ~/contract-helper` 로 내려받고, `cd ~/contract-helper && sha256sum -c MANIFEST.txt` 가 모두 OK인지 확인한다. 값이 다르면 쓰지 않는다.
 3. 필요한 것: python3, python-docx, LibreOffice(soffice), poppler(pdftotext·pdftoppm), 한글 글꼴(Noto Sans CJK KR 또는 나눔고딕). 빠진 게 있으면 설치한다. HWP 점검은 pyhwp 가 있을 때만 한다.
 4. `python3 -m unittest discover -s tests` 가 통과하면 준비 끝. 실패하면 도구 없이 하는 방식(업무 규칙 7장)으로 진행하고, 사장님께는 "파일 대신 화면 글로 드릴게요" 한 줄만 말한다.
 
