@@ -130,6 +130,32 @@ class TestRules(unittest.TestCase):
             self.assertIn("연대보증", extract(p))
             self.assertIn("⑩", review(p)["final_ids"])
 
+    def test_rule12_gap_decides_inspection(self):
+        r = review("제5조(검수) 검수 기준과 기간은 갑이 정한다.", is_text=True)
+        self.assertIn("⑫", r["final_ids"])
+        self.assertTrue(any(h["id"] == "⑫" and h["status"] == "확정" for h in r["toxic"]))
+        self.assertIn("⑫", ids("제5조(검수) 을은 갑이 정하는 기준에 따라 검수를 받는다."))
+        self.assertIn("⑫", ids("제5조(검수) 검수는 갑이 별도로 정한 방법으로 한다."))
+        for t in ("제5조(검수) 검수 기준과 기간은 갑과 을이 협의하여 정한다.",
+                  "제5조(검수) 검수 기준과 기간은 갑과 을이 합의하여 정한다.",
+                  "제5조(검수) 검수 기준과 기간은 양 당사자가 정한다.",
+                  "제3조(대금) 갑은 검수 완료 후 60일 이내에 대금을 지급한다."):
+            self.assertNotIn("⑫", ids(t), t)
+        # 사장님이 갑이면 반대로 읽는다
+        self.assertNotIn("⑫", ids("제5조(검수) 검수 기준과 기간은 갑이 정한다.", side="갑"))
+        self.assertIn("⑫", ids("제5조(검수) 검수 기준과 기간은 을이 정한다.", side="갑"))
+
+    def test_five_clause_contract_tool_only(self):
+        t = ("제3조(대금) 갑은 검수 완료 후 60일 이내에 총 500만원을 지급한다. 선급금은 없다.\n"
+             "제4조(수정) 을은 갑이 만족할 때까지 횟수 제한 없이 수정한다.\n"
+             "제5조(검수) 검수 기준과 기간은 갑이 정한다.\n"
+             "제6조(해지) 갑은 언제든지 통보로 계약을 해지할 수 있다.\n"
+             "제7조(관할) 분쟁은 갑의 본사 소재지 법원에서 한다.")
+        r = review(t, is_text=True)
+        self.assertEqual(r["final_ids"], ["①", "②", "⑦", "⑪", "⑫"])
+        self.assertEqual([h["clause"] for h in r["toxic"] if h["id"] == "⑫"], ["제5조"])
+        self.assertEqual((r["score"]["점수"], r["score"]["등급"]), (76, "🔴 위험"))
+
 
 class TestGenerator(unittest.TestCase):
     @classmethod
